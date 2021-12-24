@@ -39,7 +39,6 @@ class ProfileForm(ModelForm):
             'location',
             'profile_image',
             'social_facebook',
-            'hobby',
             'background',
             'job',
         ]
