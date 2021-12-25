@@ -18,5 +18,9 @@ urlpatterns = [
     path('update-hobby/<str:pk>/', views.updateHobby, name='update-hobby'),    
     path('delete-hobby/<str:pk>/', views.deleteHobby, name='delete-hobby'),
 
+    path('inbox/', views.inbox, name='inbox'),
+    path('message/<str:pk>/', views.viewMessage, name='message'),
+    path('create-message/<str:pk>/', views.createMessage, name='create-message'),
+    
     
 ]

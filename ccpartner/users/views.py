@@ -1,3 +1,4 @@
+from django.contrib.messages.api import MessageFailure
 from django.shortcuts import redirect, render
 
 from .models import Profile
@@ -9,7 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from .form import CustomerUserCreationForm, ProfileForm, HobbyForm
+from .form import CustomerUserCreationForm, MessageForm, ProfileForm, HobbyForm
 from . import utils
 
 def registerUser(request):
@@ -198,3 +199,65 @@ def deleteHobby(request, pk):
         "hobby":hobby,
     }
     return render(request, 'users/delete-hobby.html', context=context)
+
+
+@login_required(login_url='login')
+def inbox(request):
+    profile = request.user.profile
+    messageRequest = profile.messages.all()
+
+    unreadCount = messageRequest.filter(is_read__in = ['False']).count()
+    context = {
+        "messageRequests": messageRequest, 
+        "unreadCount":unreadCount,
+    }
+
+    return render(request, 'users/inbox.html', context=context)
+
+
+
+@login_required(login_url='login')
+def viewMessage(request, pk):
+    profile = request.user.profile
+    messageRequest = profile.messages.get(id=pk)
+
+    if not messageRequest.is_read:
+        messageRequest.is_read = True
+        messageRequest.save()
+    
+    context = {
+        "message": messageRequest,
+    }
+
+    return render(request, 'users/message.html', context=context)
+
+def createMessage(request, pk):
+    recipient = Profile.objects.get(id=pk)
+    form = MessageForm()
+
+    try:
+        sender = request.user.profile
+    except: 
+        sender = None
+
+    if request.method == "POST":
+        form = MessageForm(request.POST)
+
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = sender
+            message.recipient = recipient
+            
+            if sender:
+                message.email = sender.email
+                message.name = sender.name
+            
+            message.save()
+            messages.success(request, "Your message was successfully sent!")
+            return redirect('user-profile', pk=recipient.id)
+    
+    context={
+        'form':form,
+        'recipient':recipient,
+    }
+    return render(request, 'users/message-form.html', context=context)
