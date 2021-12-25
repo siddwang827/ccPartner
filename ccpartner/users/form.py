@@ -2,7 +2,7 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import Profile
+from .models import Profile, Hobby
 
 class CustomerUserCreationForm(UserCreationForm):
     class Meta:
@@ -45,6 +45,20 @@ class ProfileForm(ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(ProfileForm, self).__init__(*args, **kwargs)
+        for name, fields in self.fields.items():
+            fields.widget.attrs.update({
+                'class': 'input',
+            })   
+
+
+class HobbyForm(ModelForm):
+    class Meta:
+        model = Hobby
+        fields = '__all__'
+        exclude = ['owner']
+
+    def __init__(self, *args, **kwargs):
+        super(HobbyForm, self).__init__(*args, **kwargs)
         for name, fields in self.fields.items():
             fields.widget.attrs.update({
                 'class': 'input',

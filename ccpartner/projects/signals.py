@@ -30,3 +30,14 @@ def clearOwner(sender, instance, **kwargs):
     print('clear the project owner info...')
 
 post_delete.connect(clearOwner, sender=Project)
+
+
+
+def clearMember(sender, instance, **kwargs):
+    group = instance
+    for member in group.members:
+        if member:
+            member.group_id = None
+    print('clear members group_id')
+
+post_delete.connect(clearMember, sender=Group)

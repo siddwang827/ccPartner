@@ -30,6 +30,10 @@ class Project(models.Model):
                            editable=False )
     created = models.DateTimeField( auto_now_add=True )
 
+
+    class Meta:
+        ordering = ['created']
+
     def __str__(self) -> str:
         return self.title
 
@@ -88,6 +92,15 @@ class Group(models.Model):
                            editable=False )
     created = models.DateTimeField( auto_now_add=True )
 
+
+    def __str__(self) -> str:
+        return self.project.title
+
+    class Meta: 
+        ordering = ['created']
+
+
+
     @property
     def check_is_full(self):
         if self.member_1 and self.member_2 and self.member_3:
@@ -106,6 +119,7 @@ class Group(models.Model):
         if self.member_3:
             member_list.append(self.member_3)
         return member_list
+
             
         
 

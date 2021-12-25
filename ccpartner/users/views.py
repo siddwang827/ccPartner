@@ -9,8 +9,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from .form import CustomerUserCreationForm, ProfileForm
-
+from .form import CustomerUserCreationForm, ProfileForm, HobbyForm
+from . import utils
 
 def registerUser(request):
     page = 'register'
@@ -48,20 +48,22 @@ def loginUser(request):
         try:
             user = User.objects.get(username=username)
         except:
-            messages.error(request, "Username doesn't exist")
-            return redirect('login')
+            messages.error(request, 'Username does not exist')
 
-        user = authenticate(request, username=username, password=password)
-        
-        if user:
+        user = authenticate( request, 
+                             username=username, 
+                             password=password )
+
+        if user is not None:
             login(request, user)
-            messages.success(request, f"Welcome back, {user.username}!")
-            return redirect("profiles")
+            return redirect(request.GET['next'] if 'next' in request.GET else 'account')
+
         else:
-            messages.error(request, 'Username or password is incorrect')
-    
+            messages.error(request, 'Username OR password is incorrect')
+
     return render(request, 'users/login-register.html')
 
+        
 
 def logoutUser(request):
     logout(request)
@@ -72,10 +74,13 @@ def logoutUser(request):
 
 
 def profiles(request):
-    profiles = Profile.objects.all()
+    profiles, search_query = utils.searchProfiles(request)
+    custom_range, profiles = utils.paginateProfile(request, profiles, 2)
 
     context = {
         "profiles":profiles,
+        "search_query": search_query,
+        "custom_range":custom_range,
     }
 
     return render(request, 'users/profiles.html', context=context)
@@ -83,9 +88,12 @@ def profiles(request):
 
 def userProfile(request, pk):
     profile = Profile.objects.get(id=pk)
-
+    topHobbies = profile.hobby_set.exclude(description__exact='')
+    otherHobbies = profile.hobby_set.filter(description__exact='')
     context = {
         "profile":profile,
+        'topHobbies': topHobbies,
+        'otherHobbies': otherHobbies,
     }
 
     return render(request, 'users/user-profile.html', context=context)
@@ -133,4 +141,60 @@ def updateProfile(request):
 
     return render(request, 'users/profile_form.html', context=context)
     
-        
+
+@login_required(login_url='login')
+def createHobby(request):
+    profile = request.user.profile
+    form = HobbyForm()
+
+    if request.method == "POST":
+        form =  HobbyForm(request.POST)
+        if form.is_valid():
+            hobby = form.save(commit=False)
+            hobby.owner = profile
+            hobby.save()
+
+            messages.success(request, 'Hobby was created successfully!')
+            return redirect('account')
+    
+    context = {
+        'form':form,
+    }
+
+    return render(request, 'users/hobby_form.html', context=context)
+
+
+@login_required(login_url='login')
+def updateHobby(request, pk):
+    profile = request.user.profile
+    hobby = profile.hobby_set.get(id=pk)
+    form = HobbyForm(instance=hobby)
+
+    if request.method == "POST":
+        form = HobbyForm(request.POST, instance=hobby)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Hobby was updated successfully!')
+
+            return redirect('account')
+
+    context = {
+        "form":form,
+    }
+    return render(request, 'users/hobby_form.html', context=context)
+
+@login_required(login_url='login')
+def deleteHobby(request, pk):
+    profile = request.user.profile
+    hobby = profile.hobby_set.get(id=pk)
+
+    if request.method == "POST":
+        hobby.delete()
+        messages.success(request, 'Hobby was deleted successfully')
+
+        return redirect('account')
+    
+    context = {
+        "hobby":hobby,
+    }
+    return render(request, 'users/delete-hobby.html', context=context)

@@ -12,4 +12,11 @@ urlpatterns = [
     path('update-profile/', views.updateProfile,  name='update-profile'),
     
     path('account/', views.userAccount, name='account'),
+
+
+    path('create-hobby/', views.createHobby, name='create-hobby'),
+    path('update-hobby/<str:pk>/', views.updateHobby, name='update-hobby'),    
+    path('delete-hobby/<str:pk>/', views.deleteHobby, name='delete-hobby'),
+
+    
 ]
