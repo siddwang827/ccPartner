@@ -26,6 +26,7 @@ def projects(request):
 
 def project(request, pk):
     projObj = Project.objects.get(id=pk)
+    
     context = {
         "project": projObj,
     }
@@ -120,17 +121,7 @@ def removeMember(request, pk):
     group = Group.objects.get(id=group_id)
 
     if request.method == "POST":
-        member.group_id = None
-        
-        if group.member_1 == member:
-            group.member_1 = None
-        if group.member_2 == member:
-            group.member_2 = None
-        if group.member_3 == member:
-            group.member_3 = None
-        
-        group.save()
-        member.save()
+        group.removeMember(member)
         messages.success(request, f"You've kiced the memeber {member.username} out!")
     
         return redirect('account')
@@ -140,3 +131,113 @@ def removeMember(request, pk):
     }
 
     return render(request, 'projects/delete-template.html', context=context)
+
+
+
+@login_required(login_url='login')
+def quitTeam(request):
+    profile = request.user.profile
+    group = Group.objects.get(id=profile.group_id)
+
+    if request.method == "POST":
+        group.removeMember(profile)
+        messages.success(request, f"You've quit the team of the project: {group.project} successfully.")
+        utils.NotificationMessage(
+            sender = profile,
+            recipient = group.project.owner,
+            subject = "Member quit",
+            body = f"This letter is sent by system. Your Project member {profile} has left the team."
+        )
+        return redirect('account')
+    
+    context = {
+        "group": group,
+    }
+    return render(request, 'projects/delete-template.html', context=context)
+        
+
+
+@login_required(login_url="login")
+def apply(request, pk):
+    project = Project.objects.get(id=pk)
+    applier = request.user.profile
+    newApp = utils.checkApplication(applier, project)
+
+    if newApp:
+        messages.success(request, "Your application has been sent to the project host.")
+    else:
+        messages.error(request, "You've applied for the project before.")
+    
+    return redirect('project', pk=project.id)
+
+
+
+@login_required(login_url='login')
+def applyBox(request):
+    profile = request.user.profile
+    group = Group.objects.get(id=profile.group_id)
+    applyRequests = Application.objects.distinct() \
+                            .filter( group=group )
+    context = {
+        "applyRequests":applyRequests,
+        "project":group.project,
+    }
+
+    return render(request, 'projects/apply-box.html', context=context)
+
+
+@login_required(login_url='login')
+def verifyApply(request, pk):
+    application = Application.objects.get(id=pk)
+    group = application.group
+    applier = application.sender
+    host = group.project.owner
+
+    if request.method == "POST":
+        decision = request.POST.get('decision')
+        if decision == 'reject':
+            subject = 'Application Declined'
+            body = f'Sorry, your application for porject {group.project.title} by the host'
+            messages.success(request, f"You've declined the {applier}'s application")
+
+        else:
+            # Check Whether the applier is already in a project
+            if applier.group_id:
+                subject = 'Application Error'
+                body = f"Your Application was failed because yor're already in a project group"
+                messages.info(request, f"The applier {applier} has already attend other project")
+            
+            # Check whether the group is full
+            elif group.is_full:
+                subject = 'Application Error'
+                body = f"The project group you applied is already full"
+                messages.info(request, "Your project team is already full.")
+            
+            else:
+                group.addMember(applier)
+                applier.group_id = group.id
+                applier.save()
+                subject = "Application Accepted"
+                body = f"Congratulation! Your application for project {group.project.title} was accepted by the host!"
+                messages.success(request, f"You've accept {applier} application as your team member.")
+
+        utils.NotificationMessage(
+            recipient = applier,
+            sender = host,
+            subject = subject,
+            body = body
+        ) 
+
+        application.delete()
+        return redirect('apply-box')
+
+    context={
+        'apply':application,
+    }
+    return render(request, 'projects/verify-apply.html', context=context)
+
+
+# @login_required(login_url='login')
+# def sendApplication(request, pk):
+#     projct = Project.objects.get(id=pk)
+#     group = group

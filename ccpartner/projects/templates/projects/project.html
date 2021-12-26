@@ -27,7 +27,12 @@
                 </p>
               </td>
               <td class="settings__tableActions">
-                <a class="tag tag--pill tag--main settings__btn" href="#" ><i class="im im-edit"></i>Message</a>
+                {% if project.owner != request.user.profile  %}
+                <a class="tag tag--pill tag--main settings__btn" href="{% url 'create-message' project.owner.id %}?next={{ project.id }}" ><i class="im im-edit"></i>Message</a>
+                {% endif %}
+                {% if not request.user.profile.group_id and not project.group.is_full %}
+                <a class="tag tag--pill tag--main settings__btn" href="{% url 'apply' project.id %}" ><i class="im im-edit"></i>Apply</a>
+                {% endif %}
               </td>
             </tr>
           </table>

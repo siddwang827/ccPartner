@@ -84,7 +84,7 @@ class Group(models.Model):
                                   default=None,
                                   related_name='member_3')
 
-    is_fulled = models.BooleanField( default=False )
+    is_full = models.BooleanField( default=False )
 
     id = models.UUIDField( default=uuid.uuid4,
                            unique=True,
@@ -100,13 +100,44 @@ class Group(models.Model):
         ordering = ['created']
 
 
+    def addMember(self, profile):
+        if not self.member_1:
+            self.member_1 = profile
+        elif not self.member_2:
+            self.member_2 = profile
+        else:
+            self.member_3 = profile
+        self.check_is_full()
+        self.save()
 
-    @property
+
+    def removeMember(self, profile):
+        if self.member_1 == profile:
+            self.member_1 = None
+        elif self.member_2 == profile:
+            self.member_2 = None
+        elif self.member_3 == profile:
+            self.member_3 = None
+        self.check_is_full()
+        self.save()
+
+        project = self.project
+        project.is_active = True
+        project.save()
+
+        profile.group_id = None
+        profile.save()
+
+        return
+
+
+
     def check_is_full(self):
         if self.member_1 and self.member_2 and self.member_3:
-            self.is_fulled = True
+            self.is_full = True
+            self.project.is_active = False
         else:
-            self.is_fulled = False
+            self.is_full = False
         self.save()
 
     @property
@@ -120,8 +151,6 @@ class Group(models.Model):
             member_list.append(self.member_3)
         return member_list
 
-            
-        
 
 
 
@@ -135,3 +164,7 @@ class Application(models.Model):
                            unique=True,
                            editable=False )
     created = models.DateTimeField( auto_now_add=True )
+
+    def __str__(self):
+        return f'{self.sender} apply for {self.group.project}'
+

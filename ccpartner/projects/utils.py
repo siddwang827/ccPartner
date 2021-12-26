@@ -1,7 +1,7 @@
-from .models import Project, Module
+from .models import Application, Project, Module
 from django.db.models import Q
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
+from users.models import Message
 
 def searchProjects(request):
     search_query = ''
@@ -17,7 +17,7 @@ def searchProjects(request):
         Q(title__icontains=search_query) |
         Q(description__icontains=search_query) |
         Q(modules__in=modules)
-    )
+    ).filter(Q(is_active=True))
 
     return projects, search_query
 
@@ -50,3 +50,37 @@ def paginateProject(request, projects, results):
     custom_range = range(leftIndex, rightIndex+1)
     
     return custom_range, projects
+
+
+
+def checkApplication(applier, project):
+    application = Application.objects.distinct().filter(
+        Q(sender=applier), 
+        Q(group=project.group)
+    )
+
+    if application: 
+        return False
+    else:
+        Application.objects.create(
+            group = project.group,
+            sender = applier,
+        )
+
+        return True
+
+
+
+def NotificationMessage(sender, recipient, subject, body):
+    
+    param = {
+        "sender": sender,
+        "recipient": recipient,
+        "name": sender.username,
+        "subject": subject,
+        "body": body,
+    }
+
+    Message.objects.create(**param)
+
+    return 

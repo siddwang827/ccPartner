@@ -9,5 +9,10 @@ urlpatterns = [
     path('delete-project/<str:pk>/', views.deleteProject, name='delete-project'),
 
     path('remove-member/<str:pk>/', views.removeMember, name='remove-member'),
+    path('quit-team/', views.quitTeam, name="quit-team"),
+
+    path('apply/<str:pk>/', views.apply, name='apply'),
+    path('apply-box/', views.applyBox, name='apply-box'),
+    path('verify-apply/<str:pk>', views.verifyApply, name='verify-apply'),
 ]
 

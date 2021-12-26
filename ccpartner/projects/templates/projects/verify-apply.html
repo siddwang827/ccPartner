@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+
+{% block title %}
+Verify Application
+{% endblock %}
+
+{% block content %}
+
+    <!-- Main Section -->
+    <main class="formPage my-xl">
+        <div class="content-box">
+            <div class="formWrapper">
+                <a class="backButton" href="{% url 'apply-box' %}"><i class="im im-angle-left"></i></a>
+                <br>
+
+                <form class="form" method="POST">
+                    {% csrf_token %}
+                    <p>Do you want to invite <strong>{{ apply.sender }}</strong> as a project member?</p>
+                    <br/>
+                    <label><input type="radio" name="decision" value="confirm">Yes</label><br/>
+                    <label><input type="radio" name="decision" value="reject">No</label><br/>
+                    
+                    <input class="btn btn--sub btn--lg  my-md" type="submit" value="Confirm" />
+                </form>
+            </div>
+        </div>
+    </main>
+{% endblock %}

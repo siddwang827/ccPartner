@@ -22,13 +22,15 @@ delete Project
                     {% csrf_token %}
                     <p>Are your sure you want to 
                         {% if member %}
-                        remove <strong>Member: {{ member }}</strong>?
-                        {% else %}
-                        delete <strong>Project: {{ project }}</strong>?
+                        <strong>REMOVE Member: {{ member }}</strong>?
+                        {% elif project %}
+                        <strong>DELETE Project: {{ project }}</strong>?
+                        {% elif group %}
+                        <strong>QUIT group of Project: {{ group.project }}</strong>?
                         {% endif %}
                     </p>
                     <a class="btn btn--sub btn--lg  my-md" href="{{ request.GET.next }}">&#x2190 Go Back</a>
-                    <input class="btn btn--sub btn--lg  my-md" type="submit" value="Delete" />
+                    <input class="btn btn--sub btn--lg  my-md" type="submit" value="Confirm" />
                 </form>
             </div>
         </div>

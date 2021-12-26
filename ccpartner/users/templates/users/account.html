@@ -118,6 +118,9 @@ User Account
         {% if group %}
         <div class="settings">
           <h3 class="settings__title">Team Members</h3>
+          {% if not profile.is_host %}
+          <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'quit-team' %}"><i class="im im-minus"></i> Quit team</a>
+          {% endif %}
         </div>
 
         <!-- Member list -->

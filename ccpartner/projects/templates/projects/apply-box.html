@@ -1,0 +1,27 @@
+{% extends 'main.html' %}
+
+{% block title %}
+Apply box
+{% endblock %}
+
+{% block content %}
+<!-- Main Section -->
+<main class="inbox my-xl">
+  <div class="content-box">
+    <h3 class="inbox__title">Application for {{ project }}</h3>
+
+    <ul class="messages">
+      {% for apply in applyRequests %}
+      <li class="message message--unread">
+
+        <a href="{% url 'verify-apply' apply.id %}">
+          <span class="message__author">{{apply.sender.username}}</span>
+          <span class="message__date">{{apply.created}}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</main>
+
+{% endblock content %}

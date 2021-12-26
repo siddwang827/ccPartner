@@ -254,10 +254,15 @@ def createMessage(request, pk):
             
             message.save()
             messages.success(request, "Your message was successfully sent!")
-            return redirect('user-profile', pk=recipient.id)
+            
+            if 'next' in request.GET:
+                return redirect('project', pk=request.GET["next"])
+            else:
+                return redirect('user-account', pk=recipient.id)
     
     context={
         'form':form,
         'recipient':recipient,
     }
     return render(request, 'users/message-form.html', context=context)
+

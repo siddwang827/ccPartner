@@ -14,14 +14,13 @@
                 <div class="toggle-menu__lines"></div>
             </label>
             <ul class="header__menu">
+                {% if request.user.is_authenticated %}
                 <li class="header__menuItem"><a href="{% url 'profiles' %}">Students</a></li>
                 <li class="header__menuItem"><a href="{% url 'projects' %}">Projects</a></li>
-
-
-
-
-                {% if request.user.is_authenticated %}
                 <li class="header__menuItem"><a href="{% url 'inbox' %}">Inbox</a></li>
+                {% if request.user.profile.is_host %}
+                <li class="header__menuItem"><a href="{% url 'apply-box' %}">Apply</a></li>
+                {% endif %}
                 <li class="header__menuItem"><a href="{% url 'account' %}">Account</a></li>
                 <li class="header__menuItem"><a href="{% url 'logout' %}" class="btn btn--sub">Logout</a></li>
                 {% else %}
