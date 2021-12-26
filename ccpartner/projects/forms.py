@@ -7,6 +7,7 @@ class ProjectForm(ModelForm):
         fields = [ 'title', 
                    'description', 
                    'featured_image',
+                   'is_active'
                    ]
 
     def __init__(self, *args, **kwargs):

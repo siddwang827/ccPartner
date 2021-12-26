@@ -23,6 +23,12 @@ Message from {{ message.sender }}
             <div class="message__body">
                 {{ message.body | linebreaksbr }}
             </div>
+            <br>
+
+            <form class="form" method="POST">
+                {% csrf_token %}
+                <input class="btn btn--sub btn--lg  my-md" type="submit" value="Delete" />
+            </form>
         </div>
     </div>
   </main>

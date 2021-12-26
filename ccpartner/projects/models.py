@@ -135,9 +135,14 @@ class Group(models.Model):
     def check_is_full(self):
         if self.member_1 and self.member_2 and self.member_3:
             self.is_full = True
-            self.project.is_active = False
+            # if group is full, hide the project for project list
+            project = self.project
+            project.is_active = False
+            project.save()
+            
         else:
             self.is_full = False
+            
         self.save()
 
     @property

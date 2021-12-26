@@ -221,9 +221,15 @@ def viewMessage(request, pk):
     profile = request.user.profile
     messageRequest = profile.messages.get(id=pk)
 
+    if request.method == "POST":
+        messageRequest.delete()
+        messages.success(request, 'Message Deleted.')
+        return redirect('inbox')
+
     if not messageRequest.is_read:
         messageRequest.is_read = True
         messageRequest.save()
+    
     
     context = {
         "message": messageRequest,

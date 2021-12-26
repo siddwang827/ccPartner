@@ -197,20 +197,20 @@ def verifyApply(request, pk):
         decision = request.POST.get('decision')
         if decision == 'reject':
             subject = 'Application Declined'
-            body = f'Sorry, your application for porject {group.project.title} by the host'
+            body = f'Sorry, your application for porject {group.project} by the host'
             messages.success(request, f"You've declined the {applier}'s application")
 
         else:
             # Check Whether the applier is already in a project
             if applier.group_id:
                 subject = 'Application Error'
-                body = f"Your Application was failed because yor're already in a project group"
+                body = f"Your Application for {group.project} was failed because yor're already in other project."
                 messages.info(request, f"The applier {applier} has already attend other project")
             
             # Check whether the group is full
             elif group.is_full:
                 subject = 'Application Error'
-                body = f"The project group you applied is already full"
+                body = f"The project: {group.project} you applied is already full"
                 messages.info(request, "Your project team is already full.")
             
             else:
@@ -218,7 +218,7 @@ def verifyApply(request, pk):
                 applier.group_id = group.id
                 applier.save()
                 subject = "Application Accepted"
-                body = f"Congratulation! Your application for project {group.project.title} was accepted by the host!"
+                body = f"Congratulation! Your application for project {group.project} was accepted by the host!"
                 messages.success(request, f"You've accept {applier} application as your team member.")
 
         utils.NotificationMessage(
@@ -235,9 +235,3 @@ def verifyApply(request, pk):
         'apply':application,
     }
     return render(request, 'projects/verify-apply.html', context=context)
-
-
-# @login_required(login_url='login')
-# def sendApplication(request, pk):
-#     projct = Project.objects.get(id=pk)
-#     group = group
