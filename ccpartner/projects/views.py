@@ -77,6 +77,11 @@ def updateProject(request, pk):
     if request.method == "POST":
         newModules = request.POST.get('newmodules').replace(',', ' ').split()
         newModules = list(map(str.capitalize, newModules))
+
+        # check if new image is uploaded
+        if len(request.FILES):
+            project.featured_image.delete(save=True)
+
         form = ProjectForm(request.POST, request.FILES, instance=project)
         
         if form.is_valid():

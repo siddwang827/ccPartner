@@ -125,9 +125,13 @@ def updateProfile(request):
     form = ProfileForm(instance=profile)
 
     if request.method == 'POST':
+        if len(request.FILES):
+            profile.profile_image.delete(save=True)
+
         form = ProfileForm(request.POST, 
                            request.FILES,
                            instance=profile)
+        
         if form.is_valid():
             form.save()
             messages.success(request, 'Your Profile is updated successfully!')
