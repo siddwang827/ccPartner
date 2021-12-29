@@ -126,7 +126,8 @@ def updateProfile(request):
 
     if request.method == 'POST':
         if len(request.FILES):
-            profile.profile_image.delete(save=True)
+            if not "user-default" in profile.imageURL:
+                profile.profile_image.delete(save=True)
 
         form = ProfileForm(request.POST, 
                            request.FILES,

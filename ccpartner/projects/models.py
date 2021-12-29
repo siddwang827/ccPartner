@@ -7,7 +7,7 @@ import uuid
 
 class Project(models.Model):
     owner = models.ForeignKey( Profile,
-                               on_delete=models.SET_NULL,
+                               on_delete=models.CASCADE,
                                default=None,
                                null=True,
                                blank=True )
@@ -138,6 +138,7 @@ class Group(models.Model):
             # if group is full, hide the project for project list
             project = self.project
             project.is_active = False
+            
             project.save()
             
         else:

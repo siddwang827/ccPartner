@@ -80,7 +80,8 @@ def updateProject(request, pk):
 
         # check if new image is uploaded
         if len(request.FILES):
-            project.featured_image.delete(save=True)
+            if not "default.jpg" in project.imageURL:
+                project.featured_image.delete(save=True)
 
         form = ProjectForm(request.POST, request.FILES, instance=project)
         
@@ -97,6 +98,7 @@ def updateProject(request, pk):
     
     context = {
         "form":form,
+        "project": project,
     }
     return render(request, "projects/project_form.html", context=context)
 
@@ -147,12 +149,14 @@ def quitTeam(request):
     if request.method == "POST":
         group.removeMember(profile)
         messages.success(request, f"You've quit the team of the project: {group.project} successfully.")
+
         utils.NotificationMessage(
             sender = profile,
             recipient = group.project.owner,
             subject = "Member quit",
             body = f"This letter is sent by system. Your Project member {profile} has left the team."
         )
+        
         return redirect('account')
     
     context = {

@@ -25,8 +25,8 @@ Project Form
                 <div class='form__field'>
                     {% for module in project.modules.all %}
                         <div class='project-tag tag tag--pill tag--main' 
-                             data-tag="{{ tag.id }}"
-                             data-proejct="{{project.id}}">
+                             data-module="{{ module.id }}"
+                             data-project="{{ project.id }}">
                                 {{module.name}} &#215;
                         </div>
                     {% endfor %}
@@ -42,5 +42,6 @@ Project Form
         </div>
     </div>
 </main>
+
 
 {% endblock %}

@@ -54,20 +54,11 @@ def paginateProject(request, projects, results):
 
 
 def checkApplication(applier, project):
-    application = Application.objects.distinct().filter(
-        Q(sender=applier), 
-        Q(group=project.group)
+    application, created = Application.objects.get_or_create(
+        group = project.group,
+        sender = applier,
     )
-
-    if application: 
-        return False
-    else:
-        Application.objects.create(
-            group = project.group,
-            sender = applier,
-        )
-
-        return True
+    return created
 
 
 
