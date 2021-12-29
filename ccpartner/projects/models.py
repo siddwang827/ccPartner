@@ -165,6 +165,8 @@ class Application(models.Model):
                                on_delete=models.CASCADE )
     sender = models.ForeignKey( Profile,
                                 on_delete=models.CASCADE )
+    is_apply = models.BooleanField( blank=True, 
+                                    null=True )
     id = models.UUIDField( default=uuid.uuid4,
                            primary_key=True,
                            unique=True,

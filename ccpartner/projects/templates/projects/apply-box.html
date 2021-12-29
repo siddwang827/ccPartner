@@ -21,6 +21,22 @@ Apply box
       </li>
       {% endfor %}
     </ul>
+
+    <br/><br><hr/><br>
+
+    <h3 class="inbox__title">Project Quit Request</h3>
+    
+    <ul class="messages">
+      {% for quit in quitRequests %}
+      <li class="message message--unread">
+        <a href="{% url 'verify-quit' quit.id %}">
+          <span class="message__author">{{quit.sender.username}}</span>
+          <span class="message__date">{{quit.created}}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+
   </div>
 </main>
 

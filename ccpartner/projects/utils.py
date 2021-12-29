@@ -57,9 +57,17 @@ def checkApplication(applier, project):
     application, created = Application.objects.get_or_create(
         group = project.group,
         sender = applier,
+        is_apply = True,
     )
     return created
 
+def quitRequest(member, group):
+    quitApplication, created = Application.objects.get_or_create(
+        group = group,
+        sender = member,
+        is_apply = False,
+    )
+    return created
 
 
 def NotificationMessage(sender, recipient, subject, body):

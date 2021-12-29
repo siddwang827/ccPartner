@@ -129,7 +129,14 @@ def removeMember(request, pk):
 
     if request.method == "POST":
         group.removeMember(member)
+        utils.NotificationMessage(
+            sender = request.user.profile, 
+            recipient = member, 
+            subject = "Project quit notification.", 
+            body = f"This message is sent by system.\nYou've been removed from team of project: {group.project} by host.",
+            )
         messages.success(request, f"You've kiced the memeber {member.username} out!")
+
     
         return redirect('account')
     
@@ -147,15 +154,11 @@ def quitTeam(request):
     group = Group.objects.get(id=profile.group_id)
 
     if request.method == "POST":
-        group.removeMember(profile)
-        messages.success(request, f"You've quit the team of the project: {group.project} successfully.")
-
-        utils.NotificationMessage(
-            sender = profile,
-            recipient = group.project.owner,
-            subject = "Member quit",
-            body = f"This letter is sent by system. Your Project member {profile} has left the team."
-        )
+        quitRequest = utils.quitRequest(member=profile, group=group)
+        if quitRequest:
+            messages.success(request, f"Your quit request had been sent to the host.")
+        else:
+            messages.error(request, f"You've already sent the quit application, please wait for the host to accept your request.")
         
         return redirect('account')
     
@@ -185,10 +188,15 @@ def apply(request, pk):
 def applyBox(request):
     profile = request.user.profile
     group = Group.objects.get(id=profile.group_id)
+
     applyRequests = Application.objects.distinct() \
-                            .filter( group=group )
+                            .filter( group=group, is_apply=True )
+    
+    quitRequests = Application.objects.distinct() \
+                            .filter( group=group, is_apply=False )
     context = {
         "applyRequests":applyRequests,
+        "quitRequests": quitRequests,
         "project":group.project,
     }
 
@@ -206,7 +214,7 @@ def verifyApply(request, pk):
         decision = request.POST.get('decision')
         if decision == 'reject':
             subject = 'Application Declined'
-            body = f'Sorry, your application for porject {group.project} by the host'
+            body = f'This message is sent by System.\nSorry, your application for porject {group.project} was declined by the host'
             messages.success(request, f"You've declined the {applier}'s application")
 
         else:
@@ -244,3 +252,40 @@ def verifyApply(request, pk):
         'apply':application,
     }
     return render(request, 'projects/verify-apply.html', context=context)
+
+
+@login_required(login_url='login')
+def verifyQuit(request, pk):
+    quitRequest = Application.objects.get(id=pk)
+
+    if request.method == "POST":
+        decision = request.POST.get('decision')
+        if decision == 'reject':
+            messages.success(request, f"You've REJECTED the quit request from member: {quitRequest.sender}")
+            subject = "Quit Request Rejected"
+            body = "This Message is sent by system.\nYour quit request has been REJECTED by the host."
+            
+        
+        elif decision == "confirm":
+            messages.success(request, f"You've ACCEPTED the quit request from member: {quitRequest.sender}")
+            subject = "Quit Request Confirmed"
+            body = "This Message is sent by system.\nYour quit request has been ACCEPTED by the host, go to join another project group!"
+            quitRequest.group.removeMember(quitRequest.sender)
+
+        
+
+        utils.NotificationMessage(
+            sender = request.user.profile,
+            recipient = quitRequest.sender,
+            subject = subject,
+            body = body,
+        )
+
+        quitRequest.delete()
+        return redirect('apply-box')
+
+    context = {
+        'quitRequest': quitRequest,
+    }
+
+    return render(request, "projects/verify-quit.html", context=context)

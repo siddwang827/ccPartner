@@ -13,6 +13,7 @@ urlpatterns = [
 
     path('apply/<str:pk>/', views.apply, name='apply'),
     path('apply-box/', views.applyBox, name='apply-box'),
-    path('verify-apply/<str:pk>', views.verifyApply, name='verify-apply'),
+    path('verify-apply/<str:pk>/', views.verifyApply, name='verify-apply'),
+    path('verify-quit/<str:pk>/', views.verifyQuit, name='verify-quit'),
 ]
 
