@@ -1,7 +1,7 @@
 from django.contrib.messages.api import MessageFailure
 from django.shortcuts import redirect, render
 
-from .models import Profile
+from .models import Profile, Message
 from projects.models import  Group
 
 
@@ -261,7 +261,7 @@ def createMessage(request, pk):
             
             if sender:
                 message.email = sender.email
-                message.name = sender.name
+                message.name = sender.username
             
             message.save()
             messages.success(request, "Your message was successfully sent!")
@@ -269,7 +269,7 @@ def createMessage(request, pk):
             if 'next' in request.GET:
                 return redirect('project', pk=request.GET["next"])
             else:
-                return redirect('user-account', pk=recipient.id)
+                return redirect('user-profile', pk=recipient.id)
     
     context={
         'form':form,
@@ -277,3 +277,36 @@ def createMessage(request, pk):
     }
     return render(request, 'users/message-form.html', context=context)
 
+
+@login_required(login_url='login')
+def replyMessage(request, pk):
+    targetMessage = Message.objects.get(id=pk)
+    if "Re: " in targetMessage.subject:
+        subject = targetMessage.subject
+    else:
+        subject = f'Re: {targetMessage.subject}'
+    form = MessageForm(
+        initial = {'subject':subject}
+    )
+
+    if request.method == "POST":
+        form = MessageForm(request.POST)
+
+        if form.is_valid():
+            message = form.save(commit=False)
+            sender = request.user.profile
+            
+            message.sender = sender
+            message.recipient = targetMessage.sender
+            message.email = sender.email
+            message.name = sender.username
+
+            message.save()
+            messages.success(request, f"You've successfully replied the sender {targetMessage.sender}")
+
+            return redirect('inbox')
+
+    context = {
+        'form': form,
+    }
+    return render(request, 'users/message-form.html', context=context)

@@ -70,7 +70,7 @@ def quitRequest(member, group):
     return created
 
 
-def NotificationMessage(sender, recipient, subject, body):
+def NotificationMessage(sender, recipient, subject, body, is_apply_related=False):
     
     param = {
         "sender": sender,
@@ -78,6 +78,7 @@ def NotificationMessage(sender, recipient, subject, body):
         "name": sender.username,
         "subject": subject,
         "body": body,
+        "is_apply_related": is_apply_related,
     }
 
     Message.objects.create(**param)

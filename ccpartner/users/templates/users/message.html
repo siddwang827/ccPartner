@@ -27,6 +27,9 @@ Message from {{ message.sender }}
 
             <form class="form" method="POST">
                 {% csrf_token %}
+                {% if not message.is_apply_related %}
+                <a class="btn btn--sub btn--lg  my-md" href="{% url 'reply-message' message.id %}">Reply</a>
+                {% endif %}
                 <input class="btn btn--sub btn--lg  my-md" type="submit" value="Delete" />
             </form>
         </div>

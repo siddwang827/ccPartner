@@ -242,7 +242,8 @@ def verifyApply(request, pk):
             recipient = applier,
             sender = host,
             subject = subject,
-            body = body
+            body = body,
+            is_apply_related = True,
         ) 
 
         application.delete()
@@ -279,6 +280,7 @@ def verifyQuit(request, pk):
             recipient = quitRequest.sender,
             subject = subject,
             body = body,
+            is_apply_related = True,
         )
 
         quitRequest.delete()

@@ -109,6 +109,7 @@ class Message(models.Model):
     body = models.TextField()
     is_read = models.BooleanField( default=False,
                                    null=True )
+    is_apply_related = models.BooleanField( default=False )
     created = models.DateTimeField( auto_now_add=True )
     id = models.UUIDField( default=uuid.uuid4,
                            primary_key=True,
@@ -119,4 +120,4 @@ class Message(models.Model):
         return self.subject
 
     class Meta:
-        ordering = ['is_read', '-created']
+        ordering = ['is_read', "-is_apply_related", '-created']

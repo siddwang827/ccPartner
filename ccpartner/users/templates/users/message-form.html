@@ -9,10 +9,17 @@ Edit Message to {{ recipient.username }}
   <main class="formPage my-xl">
     <div class="content-box">
         <div class="formWrapper">
+            {% if recipient %}
             <a href="{% url 'user-profile' recipient.id %}" 
                class="backButton">
                <i class="im im-angle-left"></i>
             </a>
+            {% else %}
+            <a href="{% url 'inbox' %}" 
+               class="backButton">
+               <i class="im im-angle-left"></i>
+            </a>
+            {% endif %}
             <br/>
 
             <form class="form" method="POST">
