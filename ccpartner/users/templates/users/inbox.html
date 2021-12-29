@@ -1,5 +1,5 @@
 {% extends 'main.html' %}
-
+{% load static %}
 {% block title %}
 Message Inbox
 {% endblock %}
@@ -10,8 +10,9 @@ Message Inbox
   <div class="content-box">
     <h3 class="inbox__title">New Messages(<span>{{unreadCount}}</span>)</h3>
 
+    {% if messageRequests %}
     <ul class="messages">
-      {% for message in messageRequests %}
+      {% for message in messageRequests %}  
       {% if message.is_read == False %}
       <li class="message message--unread">
         {% else %}
@@ -26,6 +27,18 @@ Message Inbox
       </li>
       {% endfor %}
     </ul>
+    {% else %}
+    <table class="settings__table">
+      <tr>
+            <td class="settings__thumbnail">
+              <a href="#"><img src="{% static 'images/no-message.jpg' %}" alt='no msg'/></a>
+            </td>
+            <td class="settings__tableInfo">
+              <h5>~Your message box is empty~</h5>
+            </td>
+          </tr>
+    </table>
+    {% endif %}
   </div>
 </main>
 
