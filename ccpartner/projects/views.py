@@ -56,9 +56,11 @@ def createProject(request):
                 moduleObj, created = Module.objects.get_or_create(name=module)
                 project.modules.add(moduleObj)
             
+            form.save_m2m()
             
             
-            return redirect('projects')
+            
+            return redirect('project', project.id)
     else:
         print("Error in creating Project")
 
@@ -109,6 +111,7 @@ def deleteProject(request, pk):
     project = profile.project_set.get(id=pk)
 
     if request.method == "POST":
+        project.featured_image.delete(save=True)
         project.delete()
         messages.success(request, 'Project was deleted successfully')
         return redirect('account')

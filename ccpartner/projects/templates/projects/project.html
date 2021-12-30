@@ -49,7 +49,24 @@
 
         <!-- Module part -->
         <div class="column column--1of3">
-          <h3 class="singleProject__subtitle">Tools & Stacks</h3>
+
+          <h3 class="singleProject__subtitle">Project Feature</h3>
+          <div class="singleProject__toolStack">
+            <span class="tag tag--pill tag--sub tag--lg">
+              <small>{{ project.get_feature_display }}</small>
+            </span>
+          </div>
+
+          <h3 class="singleProject__subtitle">Project Type</h3>
+          <div class="singleProject__toolStack">
+            {% for type in project.types.all %}
+            <span class="tag tag--pill tag--sub tag--lg">
+              <small>{{ type }}</small>
+            </span>
+            {% endfor %}
+          </div>
+
+          <h3 class="singleProject__subtitle">Involved Modules</h3>
           <div class="singleProject__toolStack">
             {% for module in project.modules.all %}
             <span class="tag tag--pill tag--sub tag--lg">
@@ -57,8 +74,11 @@
             </span>
             {% endfor %}
           </div>
+
         </div>
           <!-- End of Module -->
+
+        
 
       </div>
     </div>

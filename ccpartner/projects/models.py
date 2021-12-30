@@ -6,6 +6,19 @@ import uuid
 # Create your models here.
 
 class Project(models.Model):
+
+    FEATURE_TYPE = (
+        ("delicacy", "美食評鑑"),
+        ("finance", "投資理財"),
+        ("sport", '運動健身') ,
+        ("pet", "寵物生活"),
+        ("toolkit", "輔助工具"),
+        ("society", "社會政治"),
+        ("shopping", "購物達人"),
+        ("entertainment","音樂電影"),
+        ("other","其他"),
+    )
+
     owner = models.ForeignKey( Profile,
                                on_delete=models.CASCADE,
                                default=None,
@@ -21,6 +34,15 @@ class Project(models.Model):
     modules = models.ManyToManyField( "Module", 
                                       blank=True,
                                       null=True, )
+
+    types = models.ManyToManyField( "Type", 
+                                   blank=True,
+                                   null=True,
+                                   default=None )
+
+    feature = models.CharField( max_length=20,
+                                choices=FEATURE_TYPE,
+                                default=FEATURE_TYPE[-1][0] )
 
     is_active = models.BooleanField( default=True )
 
@@ -49,6 +71,19 @@ class Project(models.Model):
 
 
 class Module(models.Model):
+    name = models.CharField(max_length=100)
+    id = models.UUIDField( default=uuid.uuid4,
+                           unique=True,
+                           primary_key=True,
+                           editable=False )
+    created = models.DateTimeField( auto_now_add=True )
+    
+    def __str__(self) -> str:
+        return self.name
+
+
+
+class Type(models.Model):
     name = models.CharField(max_length=100)
     id = models.UUIDField( default=uuid.uuid4,
                            unique=True,

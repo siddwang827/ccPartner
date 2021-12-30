@@ -8,10 +8,13 @@ class ProjectForm(ModelForm):
         fields = [ 'title', 
                    'description', 
                    'featured_image',
-                   'is_active'
+                   'is_active',
+                   'types', 
+                   'feature'
                    ]
         widgets = {
             "featured_image": forms.FileInput,
+            "types": forms.CheckboxSelectMultiple,
         }
 
     def __init__(self, *args, **kwargs):

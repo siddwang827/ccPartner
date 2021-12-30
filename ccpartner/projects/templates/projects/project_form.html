@@ -9,7 +9,7 @@ Project Form
 <main class="formPage my-xl">
     <div class="content-box">
         <div class="formWrapper">
-            <a class="backButton" href="{% url 'projects' %}"><i class="im im-angle-left"></i></a>
+            <a class="backButton" href="{% url 'account' %}"><i class="im im-angle-left"></i></a>
             <br>
 
             <form class="form" method='POST' enctype="multipart/form-data">
@@ -20,7 +20,14 @@ Project Form
                     <label for="formInput#text">{{field.label}}</label>
                     {{field}}
                 </div>
+                <br>
                 {% endfor %}
+
+
+                <div class="form__field">
+                    <label for="formInput#text">Module</label>
+                    <textarea class="input" name="newmodules" placeholder="Add tags here..."></textarea>
+                </div>
 
                 <div class='form__field'>
                     {% for module in project.modules.all %}
@@ -30,11 +37,6 @@ Project Form
                                 {{module.name}} &#215;
                         </div>
                     {% endfor %}
-                </div>
-
-                <div class="form__field">
-                    <label for="formInput#text">Module</label>
-                    <textarea class="input" name="newmodules" placeholder="Add tags here..."></textarea>
                 </div>
 
                 <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
