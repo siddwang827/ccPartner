@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 
 def projects(request):
     projects, search_query = utils.searchProjects(request)
-    custom_range, projects = utils.paginateProject(request, projects, 1)
+    custom_range, projects = utils.paginateProject(request, projects, 6)
 
     context = {
         "projects":projects,

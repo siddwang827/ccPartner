@@ -38,10 +38,10 @@ Projects
           <div class="column">
             <div class="card project">
               <a href="{% url 'project' proj.id %}" class="project">
-                <img class="project__thumbnail" src="{{ proj.featured_image.url }}" alt="project thumbnail" />
+                <img class="project__thumbnail" src="{{ proj.imageURL }}" alt="project thumbnail" />
                 <div class="card__body">
                   <h3 class="project__title">{{proj.title}}</h3>
-                  <p><a class="project__author" href="#">By {{proj.owner}}</a></p>
+                  <p><a class="project__author" href="{% url 'user-profile' proj.owner.id %}">By {{proj.owner}}</a></p>
                   
                   <div class="project__tags">
                     {% for module in proj.Modules.all %}

@@ -76,7 +76,7 @@ def logoutUser(request):
 
 def profiles(request):
     profiles, search_query = utils.searchProfiles(request)
-    custom_range, profiles = utils.paginateProfile(request, profiles, 2)
+    custom_range, profiles = utils.paginateProfile(request, profiles, 9)
 
     context = {
         "profiles":profiles,

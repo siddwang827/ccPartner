@@ -35,14 +35,22 @@ img {
   padding: 1.5rem 0;
 }
 
+
 .header > .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+.header__logo{
+  display: flex;
+  text-align: center;
+  
+}
+
 .header__logo > img {
   height: 3.8rem;
+  margin-right: 10px;
 }
 
 .header__nav > ul {
@@ -509,10 +517,14 @@ img {
 
 /*========== Projects ==========*/
 
+a.project{
+  width: 100%;
+}
+
 .project__thumbnail {
   height: 25rem;
   object-fit: cover;
-  object-position: top center;
+  object-position: center;
 }
 
 .project__title {

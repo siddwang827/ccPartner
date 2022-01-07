@@ -42,7 +42,8 @@ class Profile(models.Model):
                                    null=True )
 
     job = models.CharField( max_length=100,
-                            choices=JOB_TYPE )
+                            choices=JOB_TYPE,
+                            default="other" )
 
     is_host = models.BooleanField( default=False )
 
