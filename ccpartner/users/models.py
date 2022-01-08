@@ -36,7 +36,8 @@ class Profile(models.Model):
                                         null=True )
     location = models.CharField( max_length=100, 
                                  blank=True,
-                                 null=True )
+                                 null=True,
+                                 default="Taiwan" )
     background = models.CharField( max_length=200,
                                    blank=True,
                                    null=True )

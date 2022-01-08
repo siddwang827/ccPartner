@@ -139,7 +139,7 @@ User Account
               </p>
             </td>
             <td class="settings__tableActions">
-              <a class="tag tag--pill tag--main settings__btn" href="#" ><i class="im im-edit"></i>Message</a>
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'create-message' project.owner.id  %}" ><i class="im im-edit"></i>Message</a>
             </td>
           </tr>
           {% endif %}
@@ -157,7 +157,7 @@ User Account
               </p>
             </td>
             <td class="settings__tableActions">
-              <a class="tag tag--pill tag--main settings__btn" href="#" ><i class="im im-edit"></i>Message</a>
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'create-message' member.id %}" ><i class="im im-edit"></i>Message</a>
               {% if profile.is_host %}
               <a class="tag tag--pill tag--main settings__btn" href="{% url 'remove-member' member.id %}"><i class="im im-x-mark-circle-o"></i>
                 Remove</a>
