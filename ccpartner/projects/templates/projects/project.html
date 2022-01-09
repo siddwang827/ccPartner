@@ -1,0 +1,90 @@
+{% extends 'main.html' %}
+
+{% block title %}
+{{project.title}}
+{% endblock %}
+
+{% block content %}
+    <!-- Main Section -->
+  <main class="singleProject my-md">
+    <div class="container">
+      <div class="layout">
+        
+
+        <div class="column column--2of3">
+          <img class="singleProject__preview" src="{{ project.imageURL }}" alt="portfolio thumbnail" />
+          <h2 class="singleProject__title">{{ project.title }}</h2>
+
+          <!-- project Host table -->
+          <h3 class="singleProject__subtitle">Host</h3>
+          <table class="settings__table">
+            <!-- Host -->
+            <tr>
+              <td class="settings__thumbnail">
+                <a href="{% url 'user-profile' project.owner.id %}"><img src="{{ project.owner.imageURL }}" alt="Project Thumbnail" /></a>
+              </td>
+              <td class="settings__tableInfo">
+                <a href="{% url 'user-profile' project.owner.id %}">{{ project.owner.username }}</a>
+                <p>
+                  {{ project.owner.bio|slice:'50' }}
+                </p>
+              </td>
+              <td class="settings__tableActions">
+                {% if project.owner != request.user.profile  %}
+                <a class="tag tag--pill tag--main settings__btn" href="{% url 'create-message' project.owner.id %}?next={{ project.id }}" ><i class="im im-edit"></i>Message</a>
+                {% endif %}
+                {% if not request.user.profile.group_id and not project.group.is_full %}
+                <a class="tag tag--pill tag--main settings__btn" href="{% url 'apply' project.id %}" ><i class="im im-edit"></i>Apply</a>
+                {% endif %}
+              </td>
+            </tr>
+          </table>
+          <!--End of project Host table -->
+
+
+
+          <h3 class="singleProject__subtitle">About the Project</h3>
+          <div class="singleProject__info">
+            {{ project.description }}
+          </div>
+          <!-- <a href="{% url 'update-project' project.id %}">Edit Project</a> -->
+        </div>
+
+        <!-- Module part -->
+        <div class="column column--1of3">
+
+          <h3 class="singleProject__subtitle">Project Feature</h3>
+          <div class="singleProject__toolStack">
+            <span class="tag tag--pill tag--sub tag--lg">
+              <small>{{ project.get_feature_display }}</small>
+            </span>
+          </div>
+
+          <h3 class="singleProject__subtitle">Project Type</h3>
+          <div class="singleProject__toolStack">
+            {% for type in project.types.all %}
+            <span class="tag tag--pill tag--sub tag--lg">
+              <small>{{ type }}</small>
+            </span>
+            {% endfor %}
+          </div>
+
+          <h3 class="singleProject__subtitle">Involved Modules</h3>
+          <div class="singleProject__toolStack">
+            {% for module in project.modules.all %}
+            <span class="tag tag--pill tag--sub tag--lg">
+              <small>{{module}}</small>
+            </span>
+            {% endfor %}
+          </div>
+
+        </div>
+          <!-- End of Module -->
+
+        
+
+      </div>
+    </div>
+    </div>
+  </main>
+{% endblock %}

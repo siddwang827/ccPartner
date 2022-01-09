@@ -1,0 +1,179 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %}
+User Account
+{% endblock %}
+
+{% block content %}
+
+<main class="settingsPage profile my-md">
+  <div class="container">
+    <div class="layout">
+      <div class="column column--1of3">
+        <div class="card text-center">
+          <div class="card__body dev">
+            <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-profile' %}"><i class="im im-edit"></i> Edit</a>
+            <img class="avatar avatar--xl dev__avatar" src="{{ profile.imageURL }}" />
+            <h2 class="dev__name">{{ profile.username }}</h2>
+            <!-- <p class="dev__title">{{ profile.get_job_display }}</p> -->
+            <p class="dev__title">{{ profile.job }}</p>
+            <p class="dev__location">Based in {{ profile.location }}</p>
+            <ul class="dev__social">
+              {% if profile.social_facebook %}
+              <li>
+                <a title="Personal Website" href="{{ profile.social_facebook }}" target="_blank"><i class="im im-facebook"></i></a>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="column column--2of3">
+        <div class="devInfo">
+          <h3 class="devInfo__title">Background</h3>
+          <p class="devInfo__about">
+            {{ profile.background }}
+          </p>
+        </div>
+
+        <div class="column column--2of3">
+          <div class="devInfo">
+            <h3 class="devInfo__title">About Me</h3>
+            <p class="devInfo__about">
+              {{ profile.bio }}
+            </p>
+          </div>
+
+        <!-- Hobby section -->
+         <div class="settings">
+          <h3 class="settings__title">Hobby</h3>
+          <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'create-hobby' %}"><i class="im im-plus"></i> Add Hobby</a>
+        </div>
+
+        <table class="settings__table">
+          {% for hobby in profile.hobby_set.all %}
+          <tr>
+            <td class="settings__tableInfo">
+              <h4>{{ hobby.name }}</h4>
+              <p>
+                {{ hobby.description }}
+              </p>
+            </td>
+            <td class="settings__tableActions">
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-hobby' hobby.id %}"><i class="im im-edit"></i> Edit</a>
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'delete-hobby' hobby.id %}?next=/account"><i class="im im-x-mark-circle-o"></i>
+                Delete</a>
+            </td>
+          </tr>
+          {% endfor %}
+          
+        </table>
+        <!-- End of Hobby section -->
+
+
+        <!-- Project section --> 
+        <div class="settings">
+          <h3 class="settings__title">Projects</h3>
+          {% if not profile.group_id %}
+          <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'create-project' %}"><i class="im im-plus"></i> Add Project</a>
+          {% endif %}
+        </div>
+
+        
+        <table class="settings__table">
+          {% if project %}
+          <tr>
+            <td class="settings__thumbnail">
+              <a href="{% url 'project' project.id %}"><img src="{{ project.imageURL }}" alt="Project Thumbnail" /></a>
+            </td>
+            <td class="settings__tableInfo">
+              <a href="{% url 'project' project.id %}">{{ project.title }}</a>
+              <p>
+                {{ project.description|slice:'50' }}
+              </p>
+            </td>
+            <td class="settings__tableActions">
+              {% if profile.is_host %}
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-project' project.id %}"><i class="im im-edit"></i> Edit</a>
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'delete-project' project.id %}?next=/account"><i class="im im-x-mark-circle-o"></i>
+                Delete</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td class="settings__thumbnail">
+              <a href="#"><img src="{% static 'images/no-project.jpg' %}" alt='no proj'/></a>
+            </td>
+            <td class="settings__tableInfo">
+              <h5>You havn't attend any project yet.</h5>
+            </td>
+          </tr>
+          {% endif %}
+        </table>
+        <!-- end of project section -->
+
+        <!-- Group Member Section -->
+        {% if group %}
+        <div class="settings">
+          <h3 class="settings__title">Team Members</h3>
+          {% if not profile.is_host %}
+          <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'quit-team' %}?next=/account"><i class="im im-minus"></i> Quit team</a>
+          {% endif %}
+        </div>
+
+        <!-- Member list -->
+        <table class="settings__table">
+          <!-- Host -->
+          {% if not profile.is_host %}
+          <tr>
+            <td class="settings__thumbnail">
+              <a href="{% url 'user-profile' project.owner.id %}"><img src="{{ project.owner.imageURL }}" alt="Project Thumbnail" /></a>
+            </td>
+            <td class="settings__tableInfo">
+              <a href="{% url 'user-profile' project.owner.id %}">{{ project.owner.username }} (Host)</a>
+              <p>
+                {{ project.owner.bio|slice:'50' }}
+              </p>
+            </td>
+            <td class="settings__tableActions">
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'create-message' project.owner.id  %}" ><i class="im im-edit"></i>Message</a>
+            </td>
+          </tr>
+          {% endif %}
+
+          {% for member in group.members %}
+          {% if member != profile %}
+          <tr>
+            <td class="settings__thumbnail">
+              <a href="{% url 'user-profile' member.id %}"><img src="{{ member.imageURL }}" alt="Project Thumbnail" /></a>
+            </td>
+            <td class="settings__tableInfo">
+              <a href="{% url 'user-profile' member.id %}">{{ member.username }}</a>
+              <p>
+                {{ member.bio|slice:'50' }}
+              </p>
+            </td>
+            <td class="settings__tableActions">
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'create-message' member.id %}" ><i class="im im-edit"></i>Message</a>
+              {% if profile.is_host %}
+              <a class="tag tag--pill tag--main settings__btn" href="{% url 'remove-member' member.id %}"><i class="im im-x-mark-circle-o"></i>
+                Remove</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </table>
+        
+        {% endif %} <!-- end of group -->
+
+
+      </div>
+    </div>
+  </div>
+</main>
+
+{% endblock %}
