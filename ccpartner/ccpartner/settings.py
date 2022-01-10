@@ -83,14 +83,27 @@ WSGI_APPLICATION = "ccpartner.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# Singapore Server
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "ccPartner",
+#         "USER": "ccPartner",
+#         "PASSWORD": "ccPartner2022",
+#         "HOST": "database-1.cbaqmszz6rwu.ap-southeast-1.rds.amazonaws.com",
+#         "PORT": "5433",
+#     }
+# }
+
+# HK Server
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
         "NAME": "ccPartner",
-        "USER": "ccPartner",
+        "USER": "ccpartner",
         "PASSWORD": "ccPartner2022",
-        "HOST": "database-1.cbaqmszz6rwu.ap-southeast-1.rds.amazonaws.com",
-        "PORT": "5433",
+        "HOST": "database-1.cvpxworplnrr.ap-east-1.rds.amazonaws.com", 
+        "PORT": "5432",
     }
 }
 
