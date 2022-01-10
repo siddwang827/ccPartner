@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     "corsheaders",
+    "storages",
 ]
 
 MIDDLEWARE = [
@@ -90,8 +91,12 @@ WSGI_APPLICATION = 'ccpartner.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        "NAME": "ccPartner",
+        "USER": "ccPartner",
+        "PASSWORD": "ccPartner2022",
+        "HOST": "database-1.cbaqmszz6rwu.ap-southeast-1.rds.amazonaws.com", 
+        "PORT": "5433",
     }
 }
 
@@ -200,3 +205,16 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = "AKIAUTW3OKMAAARCD7UO"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_STORAGE_BUCKET_NAME = "ccpartner-bucket"
+
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_FILE_OVERWRITE = False
+
+if os.getcwd() == "/app":
+    DEBUG = False

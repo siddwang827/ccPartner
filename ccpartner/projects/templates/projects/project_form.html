@@ -12,7 +12,9 @@ Project Form
             <a class="backButton" href="{% url 'account' %}"><i class="im im-angle-left"></i></a>
             <br>
 
-            <form class="form" method='POST' enctype="multipart/form-data">
+            <form class="form" 
+                  method='POST' 
+                  enctype="multipart/form-data">
                 {% csrf_token %}
 
                 {% for field in form %}
@@ -26,7 +28,9 @@ Project Form
 
                 <div class="form__field">
                     <label for="formInput#text">Module</label>
-                    <textarea class="input" name="newmodules" placeholder="Add tags here..."></textarea>
+                    <textarea class="input" 
+                              name="newmodules" 
+                              placeholder="Add tags here..."></textarea>
                 </div>
 
                 <div class='form__field'>

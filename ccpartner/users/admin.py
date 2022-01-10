@@ -5,3 +5,6 @@ from.models import Profile, Hobby, Message
 admin.site.register(Profile)
 admin.site.register(Hobby)
 admin.site.register(Message)
+
+
+# admin
