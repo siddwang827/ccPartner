@@ -1,0 +1,53 @@
+{% extends 'main.html' %}
+
+{% block title %}
+Project Form
+{% endblock %}
+
+{% block content %}
+<!-- Main Section -->
+<main class="formPage my-xl">
+    <div class="content-box">
+        <div class="formWrapper">
+            <a class="backButton" href="{% url 'account' %}"><i class="im im-angle-left"></i></a>
+            <br>
+
+            <form class="form" 
+                  method='POST' 
+                  enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="form__field">
+                    <label for="formInput#text">{{field.label}}</label>
+                    {{field}}
+                </div>
+                <br>
+                {% endfor %}
+
+
+                <div class="form__field">
+                    <label for="formInput#text">Module</label>
+                    <textarea class="input" 
+                              name="newmodules" 
+                              placeholder="Add tags here..."></textarea>
+                </div>
+
+                <div class='form__field'>
+                    {% for module in project.modules.all %}
+                        <div class='project-tag tag tag--pill tag--main' 
+                             data-module="{{ module.id }}"
+                             data-project="{{ project.id }}">
+                                {{module.name}} &#215;
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+            </form>
+        </div>
+    </div>
+</main>
+
+
+{% endblock %}
