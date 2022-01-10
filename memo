@@ -1,3 +1,8 @@
-待修: 
-1. Project model: owner部分先暫時可set null，之後在處理
+AWS RDS
+username: ccPartner
+password: ccPartner2022
+database name: ccPartner
 
+
+bucket: 
+ccpartner-bucket

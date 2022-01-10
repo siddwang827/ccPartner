@@ -215,3 +215,6 @@ AWS_STORAGE_BUCKET_NAME = "ccpartner-bucket"
 
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
+
+if os.getcwd() == "/app":
+    DEBUG = False
