@@ -1,2 +1,1 @@
-cd ccpartner
-web: gunicorn ccpartner.wsgi --log-file -
+web: gunicorn --pythonpath ccpartner ccpartner.wsgi --log-file -
