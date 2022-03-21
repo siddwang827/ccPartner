@@ -87,11 +87,11 @@ WSGI_APPLICATION = "ccpartner.wsgi.application"
 # DATABASES = {
 #     "default": {
 #         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": "ccPartner",
-#         "USER": "ccPartner",
-#         "PASSWORD": "ccPartner2022",
-#         "HOST": "database-1.cbaqmszz6rwu.ap-southeast-1.rds.amazonaws.com",
-#         "PORT": "5433",
+#         "NAME": "",
+#         "USER": "",
+#         "PASSWORD": "",
+#         "HOST": "",
+#         "PORT": "",
 #     }
 # }
 
@@ -99,10 +99,10 @@ WSGI_APPLICATION = "ccpartner.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        "NAME": "ccPartner",
-        "USER": "ccpartner",
-        "PASSWORD": "ccPartner2022",
-        "HOST": "database-1.cvpxworplnrr.ap-east-1.rds.amazonaws.com", 
+        "NAME": "",
+        "USER": os.environ.get('DB_USER'),
+        "PASSWORD": os.environ.get('DB_PASS'),
+        "HOST": os.environ.get('DB_HOST'), 
         "PORT": "5432",
     }
 }
@@ -170,8 +170,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "40243105s@gmail.com"
-EMAIL_HOST_PASSWORD = "mscmspakqqvbwfhd"
+EMAIL_HOST_USER = ""
+EMAIL_HOST_PASSWORD = ""
 
 
 REST_FRAMEWORK = {
@@ -211,9 +211,9 @@ SIMPLE_JWT = {
 
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-AWS_ACCESS_KEY_ID = "AKIAUTW3OKMAAARCD7UO"
-AWS_SECRET_ACCESS_KEY = "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"
-AWS_STORAGE_BUCKET_NAME = "ccpartner-bucket"
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = ""
 
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_FILE_OVERWRITE = False
